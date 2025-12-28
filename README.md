@@ -139,17 +139,8 @@ See function signatures and comments in `RtcTokenBuilder.php` for details.
 - Document API changes in README and add unit tests where applicable.
 
 ## License
-This repository contains no license by default. To publish this project, add a `LICENSE` file. Recommended: MIT.
-
-Example minimal MIT header for `LICENSE`:
-```
 MIT License
 
-Copyright (c) YEAR Your Name
+Copyright (c) 2025 Sandeep Singh
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-...
-```
-
-Replace YEAR and Your Name and paste full MIT text into `LICENSE`.
-```
