@@ -1,146 +1,71 @@
 # Agora RTC Token Builder (PHP)
 
-Lightweight PHP utilities to build Agora RTC / RTM Access Tokens. Use these server-side reference implementations to generate short-lived tokens for clients. Do NOT expose your App Certificate in client code or public repos.
+PHP helpers that build Agora RTC access tokens on a server, with a small HTTP endpoint as an example.
+
+The token code is a trimmed copy of the PHP token builder in Agora's open-source tools
+([AgoraIO/Tools](https://github.com/AgoraIO/Tools), MIT). Agora's copyright notice is kept in
+[LICENSE](LICENSE). Check Agora's repository for the current and complete implementation.
 
 ## Files
-- `AccessToken.php` — core token build / parse logic
-- `RtcTokenBuilder.php` — convenience wrapper for common RTC flows
-- `RtcTokenBuilderSample.php` — minimal HTTP endpoint example
-- `Util.php` — binary pack / unpack helpers
 
-## Overview
-This repository implements token generation compatible with Agora SDKs. The sample endpoint demonstrates a minimal token-issuing HTTP API. Generate tokens on a trusted server and return them to clients.
+- `AccessToken.php`: core token build and parse logic
+- `RtcTokenBuilder.php`: wrapper for the common RTC flows
+- `RtcTokenBuilderSample.php`: minimal HTTP endpoint example
+- `Util.php`: binary pack and unpack helpers
 
 ## Requirements
-- PHP 7.0+ (7.4+ recommended)
-- PHP extensions: ext-zlib, ext-hash (typically bundled)
 
-## Installation / Setup
-1. Copy repository files into your project or web server document root.
-2. Provide Agora credentials securely. Prefer environment variables:
+- PHP 7.0 or later (7.4 or later recommended)
+- PHP extensions `zlib` and `hash` (usually bundled)
 
-macOS / Linux:
+## Setup
+
+1. Copy the files into your project or web server directory.
+2. Provide your Agora credentials through environment variables, never in code:
+
 ```sh
 export AGORA_APP_ID="your_app_id"
 export AGORA_APP_CERTIFICATE="your_app_certificate"
 ```
 
-3. Edit `RtcTokenBuilderSample.php` to read credentials from environment variables (example uses `getenv('AGORA_APP_ID')` / `getenv('AGORA_APP_CERTIFICATE')`) instead of hard-coded values.
+3. Make sure `RtcTokenBuilderSample.php` reads them with `getenv('AGORA_APP_ID')` and
+   `getenv('AGORA_APP_CERTIFICATE')`.
 
-## Usage (HTTP sample)
-Start your PHP server and request:
+## HTTP sample
+
+Start a PHP server and request:
+
 ```sh
 curl 'http://localhost/RtcTokenBuilderSample.php?channelName=test&uid=123'
 ```
-Response:
-```json
-{"token":"<rtc-token>"}
-```
 
-## Programmatic usage
-Use the helpers in `RtcTokenBuilder.php`:
-- RtcTokenBuilder::buildTokenWithUid($appId, $appCertificate, $channelName, $uid, $role, $tokenTTL, $privilegeTTL)
-- RtcTokenBuilder::buildTokenWithUserAccount(...)
-- RtcTokenBuilder::buildTokenWithUidAndPrivilege(...)
-- RtcTokenBuilder::buildTokenWithUserAccountAndPrivilege(...)
+The response looks like `{"token":"<rtc-token>"}`.
 
-See function signatures and comments in `RtcTokenBuilder.php` for details.
+## Use from code
 
-## Security
-- Never commit your App Certificate to version control.
-- Issue tokens only from a secure backend.
-- Use short TTLs for tokens and privileges.
-- Scope tokens to the minimum privileges required for a client.
+`RtcTokenBuilder.php` provides:
 
-## Troubleshooting
-- "Invalid token" / join failures: verify App ID and App Certificate, and ensure the token TTL and privileges are set correctly.
-- Missing extensions: enable zlib/hash in your PHP configuration.
-- Ensure `channelName` and `uid` (or user account) are provided to the sample endpoint.
+- `RtcTokenBuilder::buildTokenWithUid($appId, $appCertificate, $channelName, $uid, $role, $tokenTTL, $privilegeTTL)`
+- `RtcTokenBuilder::buildTokenWithUserAccount(...)`
+- `RtcTokenBuilder::buildTokenWithUidAndPrivilege(...)`
+- `RtcTokenBuilder::buildTokenWithUserAccountAndPrivilege(...)`
 
-## Contributing
-- Fork, add tests, and open a PR.
-- Document API changes in README and add unit tests where applicable.
-
-## License
-This repository contains no license by default. To publish this project, add a `LICENSE` file. Recommended: MIT.
-
-Example minimal MIT header for `LICENSE`:
-```
-MIT License
-
-Copyright (c) YEAR Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-...
-```
-
-Replace YEAR and Your Name and paste full MIT text into `LICENSE`.
-```# Agora RTC Token Builder (PHP)
-
-Lightweight PHP utilities to build Agora RTC / RTM Access Tokens. Use these server-side reference implementations to generate short-lived tokens for clients. Do NOT expose your App Certificate in client code or public repos.
-
-## Files
-- `AccessToken.php` — core token build / parse logic
-- `RtcTokenBuilder.php` — convenience wrapper for common RTC flows
-- `RtcTokenBuilderSample.php` — minimal HTTP endpoint example
-- `Util.php` — binary pack / unpack helpers
-
-## Overview
-This repository implements token generation compatible with Agora SDKs. The sample endpoint demonstrates a minimal token-issuing HTTP API. Generate tokens on a trusted server and return them to clients.
-
-## Requirements
-- PHP 7.0+ (7.4+ recommended)
-- PHP extensions: ext-zlib, ext-hash (typically bundled)
-
-## Installation / Setup
-1. Copy repository files into your project or web server document root.
-2. Provide Agora credentials securely. Prefer environment variables:
-
-macOS / Linux:
-```sh
-export AGORA_APP_ID="your_app_id"
-export AGORA_APP_CERTIFICATE="your_app_certificate"
-```
-
-3. Edit `RtcTokenBuilderSample.php` to read credentials from environment variables (example uses `getenv('AGORA_APP_ID')` / `getenv('AGORA_APP_CERTIFICATE')`) instead of hard-coded values.
-
-## Usage (HTTP sample)
-Start your PHP server and request:
-```sh
-curl 'http://localhost/RtcTokenBuilderSample.php?channelName=test&uid=123'
-```
-Response:
-```json
-{"token":"<rtc-token>"}
-```
-
-## Programmatic usage
-Use the helpers in `RtcTokenBuilder.php`:
-- RtcTokenBuilder::buildTokenWithUid($appId, $appCertificate, $channelName, $uid, $role, $tokenTTL, $privilegeTTL)
-- RtcTokenBuilder::buildTokenWithUserAccount(...)
-- RtcTokenBuilder::buildTokenWithUidAndPrivilege(...)
-- RtcTokenBuilder::buildTokenWithUserAccountAndPrivilege(...)
-
-See function signatures and comments in `RtcTokenBuilder.php` for details.
+See the comments in the file for each parameter.
 
 ## Security
-- Never commit your App Certificate to version control.
-- Issue tokens only from a secure backend.
-- Use short TTLs for tokens and privileges.
-- Scope tokens to the minimum privileges required for a client.
+
+- Never commit your App Certificate.
+- Issue tokens only from a trusted backend.
+- Use short lifetimes and the smallest set of privileges a client needs.
 
 ## Troubleshooting
-- "Invalid token" / join failures: verify App ID and App Certificate, and ensure the token TTL and privileges are set correctly.
-- Missing extensions: enable zlib/hash in your PHP configuration.
-- Ensure `channelName` and `uid` (or user account) are provided to the sample endpoint.
 
-## Contributing
-- Fork, add tests, and open a PR.
-- Document API changes in README and add unit tests where applicable.
+- Join fails with an invalid token: check the App ID, the App Certificate, and the token and privilege lifetimes.
+- Missing extension errors: enable `zlib` and `hash` in your PHP configuration.
+- The sample needs both `channelName` and `uid` in the query string.
 
 ## License
-MIT License
 
-Copyright (c) 2025 Sandeep Singh
+MIT. See [LICENSE](LICENSE).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+The code derived from Agora's token builder stays under Agora's MIT licence.
